@@ -1,4 +1,20 @@
 from fastapi import FastAPI
 import joblib
-import pandas as pd
-app=FatAPI()
+
+import pandas as pd 
+app=FastAPI()
+
+model=joblib.load("models/student_models.pkl")
+@app.get("/")
+
+def home():
+    return {"message":"Welcome to the Student Performance Prediction API"}
+
+@app.post("/predict")
+
+def predict(study_hours: float, attendance: float, previous_marks: float):
+    input_data = pd.DataFrame([{"study_hours": study_hours, "attendance": attendance, "previous_marks": previous_marks}])
+
+
+    prediction = model.predict(input_data)
+    return {"prediction": prediction[0]}
